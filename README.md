@@ -1,2 +1,147 @@
-# Single-Cell-perturbation-project
-Can machine learning predict how cells respond to genetic perturbations that were never observed during training?
+# Predicting Unseen Genetic Perturbation Responses
+
+**Can machine learning predict how cells respond to genetic perturbations that were never observed during training?**
+
+An independent computational biology project investigating the generalization of machine-learning models for single-cell gene-expression perturbation prediction.
+
+> **Status:** In progress — dataset selection and feasibility assessment.
+
+## Overview
+
+Genetic perturbation experiments measure how cells change when a gene is knocked out, knocked down, or otherwise perturbed. Predicting these changes computationally could help researchers generate hypotheses about cellular responses and prioritize experiments.
+
+However, a model that performs well on perturbations it has already seen may not generalize to genuinely unseen targets.
+
+This project will evaluate whether a lightweight machine-learning model can predict gene-expression changes for held-out genetic perturbations using public single-cell RNA-sequencing data.
+
+The emphasis is on rigorous evaluation, transparent baselines, and understanding where predictions fail—not on building the largest possible model.
+
+## Research question
+
+When trained on a subset of genetic perturbations, can a lightweight machine-learning model predict the gene-expression response of entirely held-out perturbation targets better than simple baselines?
+
+## Objectives
+
+- Select a manageable public single-cell perturbation dataset with identifiable controls and perturbation labels.
+- Establish a control-based baseline and a training-set mean-response baseline.
+- Evaluate one lightweight machine-learning model on perturbation targets withheld entirely from training.
+- Compare predictions against experimentally observed gene-expression changes.
+- Analyze prediction errors and document the limitations of the approach.
+
+## Planned methodology
+
+### 1. Dataset selection
+
+The initial candidate source is [scPerturb](https://www.sanderlab.org/scPerturb/), a collection of single-cell perturbation datasets.
+
+The final dataset will be selected after checking its size, format, control availability, perturbation labels, and associated publication.
+
+### 2. Preprocessing
+
+The planned workflow includes:
+
+- Quality control and normalization using Scanpy.
+- Log transformation and selection of highly variable genes.
+- Construction of pseudobulk expression profiles by averaging cells within each perturbation and control group.
+- Calculation of perturbation-associated expression changes relative to control.
+
+The exact preprocessing decisions will be documented after the dataset is selected.
+
+### 3. Evaluation design
+
+The evaluation will hold out entire perturbation targets, rather than randomly splitting individual cells.
+
+All cells associated with a held-out perturbation will remain outside model training and feature selection.
+
+The split will be fixed and saved before modelling.
+
+### 4. Baselines and model
+
+The planned comparisons are:
+
+1. **Control-based baseline:** predict no expression change relative to control.
+2. **Mean-response baseline:** predict the average expression change across training perturbations.
+3. **Lightweight model:** a ridge regression or k-nearest-neighbours model using features available for unseen perturbation targets.
+
+The final model and its input features will depend on the selected dataset and the feasibility of constructing a valid unseen-target prediction task.
+
+No foundation models or external embeddings are planned.
+
+### 5. Evaluation metrics
+
+The planned metrics include:
+
+- Pearson correlation between predicted and observed expression changes.
+- Mean squared error.
+- Per-perturbation performance.
+- Performance on highly variable genes and strongly changed genes.
+
+The evaluation protocol and metrics will be finalized before model training.
+
+## Current status
+
+| Component | Status |
+|---|---|
+| Basic Scanpy tutorial | Completed |
+| Dataset selection | In progress |
+| Dataset-specific preprocessing | Not started |
+| Evaluation protocol | Planned |
+| Baseline implementation | Not started |
+| Model training and evaluation | Not started |
+| Failure analysis | Not started |
+
+## Planned repository structure
+
+```text
+.
+├── README.md
+├── requirements.txt
+├── notebooks/
+│   ├── 01_scanpy_basics.ipynb
+│   ├── 02_dataset_preprocessing.ipynb
+│   ├── 03_baselines.ipynb
+│   └── 04_model_evaluation.ipynb
+├── src/
+├── results/
+└── figures/
+```
+
+The structure will be updated as the implementation develops. Large datasets and generated intermediate files will not be committed to the repository.
+
+## Reproducibility
+
+The final repository will include:
+
+- Dataset source and citation.
+- Data-processing and evaluation scripts.
+- A fixed random seed and saved perturbation split.
+- Dependency information.
+- Instructions for reproducing the reported results.
+- A results table and figures generated by the analysis.
+
+## Limitations
+
+This is an independent, exploratory project using public experimental data.
+
+Results will depend on the selected dataset, its experimental design, and the available perturbation features.
+
+Performance on held-out perturbations within one dataset will not establish generalization across different cell types, laboratories, or experimental platforms.
+
+The project is not intended to make clinical predictions or establish causal biological mechanisms.
+
+## Timeline
+
+The project is planned for October–December 2026, with approximately 3–5 hours of work per week.
+
+The target is to complete a reproducible analysis and document its findings by December 31, 2026.
+
+## Acknowledgements
+
+This project will use publicly available research data and open-source scientific software.
+
+Dataset authors, publications, and software dependencies will be cited in the final repository.
+
+## Author
+
+Independent computational biology project by Shruti Rastogi, IIT Kanpur.
+
